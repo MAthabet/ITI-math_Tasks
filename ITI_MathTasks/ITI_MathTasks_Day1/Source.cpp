@@ -1,22 +1,30 @@
 #include <SFML/Graphics.hpp>
 
+#define Window_W 800
+#define Window_H 600
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800,600), "Main Window");
-    window.setFramerateLimit(60);
-    // Load the sprite sheet
+    sf::RenderWindow window(sf::VideoMode(Window_W, Window_H), "Main Window");
+    window.setFramerateLimit(30);
 
-    // Run the program as long as the window is open
     while (window.isOpen())
     {
         // Check for all window events
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            switch (event.type)
+            {
+            case sf::Event::Closed:
                 window.close();
+                break;
+            default:
+                break;
+            }
         }
-            //TODO
         window.clear();
+
+        window.display();
     }
 
     return 0;
