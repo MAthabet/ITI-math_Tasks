@@ -1,11 +1,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "Animation.h"
-
-#define Window_W 400
-#define Window_H 300
-#define JUMP_PATH "./Resources/_Jump.png"
-#define RUN_PATH "./Resources/_Run.png"
+#include "Layer.h"
+#include "definations.h"
 
 #define ANIMATION_SPF 0.0769
 
@@ -22,7 +19,7 @@ float quad(float t,float a, float b, float c)
 * a/4 T^2 + b T/2 = h, then a = -4h/T^2, b =4h/T
 */
 // NOTE: jumping is moving in -Y in SFML
-void jump(sf::RectangleShape* player, sf::Clock* clock,float* startY,float h = -10,float duration = 1.0f)
+void jump(sf::RectangleShape* player, sf::Clock* clock,float* startY,float h = -50,float duration = 1.0f)
 {
     float a =  (h / duration)* (- 4.0f / duration);
     float b = 4.0f* (h/ duration);
@@ -43,7 +40,7 @@ int main()
 
     sf::RectangleShape player(sf::Vector2f(Run.getSize().x/10, Run.getSize().y/1));
     player.setTexture(&Run);
-    player.setPosition(0, Window_H/2);
+    player.setPosition(0, Window_H/1.6);
 
     Animation running(&Run, sf::Vector2u(10, 1), ANIMATION_SPF);
     Animation jumping(&Jump, sf::Vector2u(3, 1), 0.3334);
@@ -53,6 +50,14 @@ int main()
     sf::Clock jumpingClock;
     bool isJumping = false;
     float jumpingStartPos = player.getPosition().y;
+
+    Layer layer1(LAYER_1,LAYER_SPEED*0.25);
+    Layer layer2(LAYER_2, LAYER_SPEED*0.5);
+    Layer layer3(LAYER_3, LAYER_SPEED*0.75);
+    Layer layer4(LAYER_4, LAYER_SPEED);
+
+    Layer* layers[] = {&layer1, &layer2 ,&layer3 ,&layer4};
+
     while (window.isOpen())
     {
         deltaTime = clock.restart().asSeconds();
@@ -103,6 +108,10 @@ int main()
             player.setTextureRect(running.uvRect);
         }
         window.clear(sf::Color::Magenta);
+        for (int i = 0; i < 4; i++)
+        {
+            layers[i]->draw(&window, deltaTime);
+        }
         window.draw(player);
         window.display();
     }
