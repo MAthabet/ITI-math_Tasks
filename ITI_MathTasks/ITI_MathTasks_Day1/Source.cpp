@@ -5,6 +5,7 @@
 
 #define PI 3.14159265
 // this function gets angle in degrees
+// 90 deg is the +y axis (-y axis is sfml)
 void updateArc(sf::ConvexShape& shape, const sf::Vector2f& center, float radius, float startAngle, float endAngle)
 {
     int pointCount = shape.getPointCount()-1;
@@ -16,10 +17,11 @@ void updateArc(sf::ConvexShape& shape, const sf::Vector2f& center, float radius,
     for (;pointCount > -1; pointCount--)
     {
         point.x = center.x + radius * cos(endAngle);
-        point.y = center.y + radius * sin(endAngle);
+        // inverted the y axis
+        point.y = center.y - radius * sin(endAngle);
         shape.setPoint(pointCount, point);
         printf("angel %f , %f, %f, sin: %f\n", endAngle,point.x, point.y, sin(endAngle));
-        endAngle -= deltaAngle;
+        endAngle += deltaAngle;
     }
 }
 
@@ -33,7 +35,7 @@ int main()
     arc.setOrigin(r, r);
     arc.setPosition(Window_W / 2, Window_H / 2);
 
-    updateArc(arc, arc.getOrigin(), r, 0, 90);
+    updateArc(arc, arc.getOrigin(), r, 90, 270);
 
     arc.setFillColor(sf::Color::Yellow);
     while (window.isOpen())
