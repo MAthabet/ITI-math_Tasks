@@ -20,9 +20,13 @@ void updateArc(sf::ConvexShape& shape, const sf::Vector2f& center, float radius,
         // inverted the y axis
         point.y = center.y - radius * sin(endAngle);
         shape.setPoint(pointCount, point);
-        printf("angel %f , %f, %f, sin: %f\n", endAngle,point.x, point.y, sin(endAngle));
         endAngle += deltaAngle;
     }
+}
+void PackMan(float Time, sf::ConvexShape& shape, const sf::Vector2f& center, float radius, float mouthAngle)
+{
+    float startAngle = mouthAngle * sin(Time * 180/PI);
+    updateArc(shape, center, radius, 0+ startAngle, 0-startAngle);
 }
 
 int main()
@@ -30,14 +34,14 @@ int main()
     sf::RenderWindow window(sf::VideoMode(Window_W, Window_H), "Main Window");
 
     sf::ConvexShape arc(30);
-
+    window.setFramerateLimit(5);
     int r = 150;
     arc.setOrigin(r, r);
     arc.setPosition(Window_W / 2, Window_H / 2);
 
-    updateArc(arc, arc.getOrigin(), r, 90, 270);
-
     arc.setFillColor(sf::Color::Yellow);
+    sf::Clock clock;
+
     while (window.isOpen())
     {
         // Check for all window events
@@ -45,14 +49,35 @@ int main()
         while (window.pollEvent(event)) {
             switch (event.type)
             {
-            case sf::Event::Closed:
+            case sf::Event::Closed :
                 window.close();
+                break;
+            case sf::Event::KeyPressed:
+                switch (event.key.code)
+                {
+                case sf::Keyboard::Up :
+                case sf::Keyboard::W :
+                    break;
+                case sf::Keyboard::Down :
+                case sf::Keyboard::S :
+                    break;
+                case sf::Keyboard::Right :
+                case sf::Keyboard::D :
+                    break;
+                case sf::Keyboard::Left :
+                case sf::Keyboard::A :
+                    break;
+                default:
+                    break;
+                }
                 break;
             default:
                 break;
             }
         }
-        window.clear();
+
+        window.clear(sf::Color::Blue);
+        PackMan(clock.getElapsedTime().asSeconds(), arc, arc.getOrigin(), r, 30);
         window.draw(arc);
         window.display();
     }
