@@ -4,6 +4,12 @@
 #define Window_H 600
 
 #define PI 3.14159265
+enum MouthDir {
+    MouthRight = 0,
+    MouthUp = 90,
+    MouthLeft = 180,
+    MouthDown = 270
+};
 // this function gets angle in degrees
 // 90 deg is the +y axis (-y axis is sfml)
 void updateArc(sf::ConvexShape& shape, const sf::Vector2f& center, float radius, float startAngle, float endAngle)
@@ -22,25 +28,28 @@ void updateArc(sf::ConvexShape& shape, const sf::Vector2f& center, float radius,
         shape.setPoint(pointCount, point);
         endAngle += deltaAngle;
     }
+    shape.setPoint(0, center);
 }
-void PackMan(float Time, sf::ConvexShape& shape, const sf::Vector2f& center, float radius, float mouthAngle)
+void PackMan(float Time, sf::ConvexShape& shape, const sf::Vector2f& center, float radius, float mouthAngle, MouthDir mouthDir, float frequency = 0.1)
 {
-    float startAngle = mouthAngle * sin(Time * 180/PI);
-    updateArc(shape, center, radius, 0+ startAngle, 0-startAngle);
+    float startAngle = mouthAngle* abs(sin(Time* frequency * (180/PI)));
+
+    updateArc(shape, center, radius, mouthDir +startAngle, 360+mouthDir-startAngle);
+    
 }
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(Window_W, Window_H), "Main Window");
-
-    sf::ConvexShape arc(30);
-    window.setFramerateLimit(5);
+    sf::ConvexShape arc(50);
     int r = 150;
     arc.setOrigin(r, r);
     arc.setPosition(Window_W / 2, Window_H / 2);
 
     arc.setFillColor(sf::Color::Yellow);
     sf::Clock clock;
+
+    MouthDir mouthDir = MouthRight;
 
     while (window.isOpen())
     {
@@ -57,15 +66,19 @@ int main()
                 {
                 case sf::Keyboard::Up :
                 case sf::Keyboard::W :
+                    mouthDir = MouthUp;
                     break;
                 case sf::Keyboard::Down :
                 case sf::Keyboard::S :
+                    mouthDir = MouthDown;
                     break;
                 case sf::Keyboard::Right :
                 case sf::Keyboard::D :
+                    mouthDir = MouthRight;
                     break;
                 case sf::Keyboard::Left :
                 case sf::Keyboard::A :
+                    mouthDir = MouthLeft;
                     break;
                 default:
                     break;
@@ -77,7 +90,7 @@ int main()
         }
 
         window.clear(sf::Color::Blue);
-        PackMan(clock.getElapsedTime().asSeconds(), arc, arc.getOrigin(), r, 30);
+        PackMan(clock.getElapsedTime().asSeconds(), arc, arc.getOrigin(), r, 30, mouthDir);
         window.draw(arc);
         window.display();
     }
