@@ -4,4 +4,4 @@
 
 - circle 1 follows the mouse, circle 2 follows circle 1, circle 3 follows circle 2, etc.
 
-![](https://github.com/MAthabet/ITI-math_Tasks/tree/Day2_Trail/GIF.gif)
+![](https://github.com/MAthabet/ITI-math_Tasks/blob/Day2_Trail/GIF.gif)
