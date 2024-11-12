@@ -92,9 +92,11 @@ int main()
                     radarCircle.move(-speed * deltaTime, 0);
                     break;
                 case sf::Keyboard::Q:
+                    if(arcAngle < 180-5)
                     arcAngle += 5;
                     break;
                 case sf::Keyboard::E:
+                    if (arcAngle > 5)
                     arcAngle -= 5;
                     break;
                 default:
